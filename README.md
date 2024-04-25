@@ -1,101 +1,114 @@
 ##Compactness
 
-The compactness of an object can be measured by the ratio (perimeter2)/area, which is dimensionless and minimized by a disk [3]. The measure of compactness is an intrinsic property of objects [4]. Therefore, the measure of compactness is invariant under geometric transformations such as: translation, rotation, and scaling. In the digital domain, most shapes have no welldefined contours, that is due to the noise of the input devices used, such as: vidicons, CCD
-cameras, scanners, sensors, or analog-to-digital converters.
+A new perimeter for shapes composed of cells is defined. This perimeter is called 
+the contact perimeter, which corresponds to the sum of the boundaries of neighboring cells of the 
+shape. Also, a relation between the perimeter of the shape and the contact perimeter is presented. 
+The contact perimeter corresponds to the measure of compactness proposed here called discrete 
+compactness. In this case, the term compactness does not refer to point-set topology, but is related 
+to intrinsic properties of objects.[1]. 
+
+The measure of discrete compactness should be an intrinsic property of objects. Therefore, it 
+should be invariant under translation, rotation, and scaling. In the digital domain, the measure 
+here proposed of discrete compactness depends on the number of the pixels used to the shape. 
+In order to make the measure of discrete compactness invariant under scaling.[1]
+
+
 #####Why is useful find the compacness?
+
+
 The compactness of is useful to detect elements with differences between different 2D-3D images of objects that may present characteristics when tested.
+image analysis and corresponding morphometric data play a crucial role in the classification of elements; The transfer of mathematical and logical methods to find real values to calculate metrics that would be almost impossible to calculate manually leads to the use of different computational methods and the use of programming language tools.
+This approach is useful in various fields, including medicine, where it helps study images of organs and detect abnormalities using digital and quantitative tools that rely on intrinsic metrics such as unobtrusive compassion. Access to such data can improve the accuracy of image analysis in digital environments and lead to more effective results.[2]
 
 #####1. Upload a image or make one.
-Upload in the file an image 2D.
 
-Image Pillow:
+- Upload in the file an image an image ".png" with color of object white.
 
-![Captura de pantalla 2024-04-03 211845](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/996b7900-0c6c-44ed-bb9d-01f6003e54e1)
+- Make one use the file "img_Black_and_grey.py"
+
+
+##### Image:
+
+![Estrella_5](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/1dce12a8-202d-4000-a328-3f139289dc8e)
 
 ####2.Convert the image to binary
--In the file “Compacidad2D.py” add the name of you file
+-In the file “Compacidad2D_2.py” add the name of you img".png"
+
 
 ```python
 Ruta de la imagen
-Matriz = convertir_imagen('rectangulo_8.png')
+Matriz = convertir_imagen('IMG_8.png')
 ```
-To binaty:
 
-![Captura de pantalla 2024-04-03 212246](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/e1aa1716-1989-444e-9849-8d0d30d44ad7)
+##### To binaty:
 
-####Contact perimeter count
+![Estrella_Jk](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/b04d2943-01ae-4c54-99f7-81dcae624ffd)
 
-- The funtion "obtener_filas" count number of pixel that fond in the colum in the array, save the number of elements in each list from array.
+####2.Contact perimeter count
+
+- This function calculates the sum of adjacent elements in each row of a matrix. It iterates over each row and, for each element in the row, checks whether the element is zero or is the last one in the row. If so, add adjacent elements equal to 1 and add this sum to the list. It then calculates the total sum of all rows and returns the list of sums per row and the total sum.
 
 ```python
-# Inicializar una lista para almacenar los conteos de elementos mayores a cero por fila
- conteo_por_fila = []
-  # Recorrer cada fila de la matriz
- for fila in range(filas):
-    # Inicializar el conteo de elementos mayores a cero en cero para esta fila
-    conteo = 0
-    # Recorrer cada elemento de la fila
-    for elemento in Matriz[fila]:
-        # Verificar si el elemento es mayor a cero
-        if elemento > 0:
-            # Incrementar el conteo si el elemento es mayor a cero
-            conteo += 1
-    # Agregar el conteo de esta fila a la lista de conteos por fila
-    conteo_por_fila.append(conteo)
+def obtener_filas(Matriz):
+    Caso_2_pc = [] # Función para calcular la suma de elementos adyacentes en cada fila de la matriz
+    for fila in Matriz:
+        suma_fila = 0
+        contador_unos = 0
+        for i, elemento in enumerate(fila):
+            if elemento == 0 or i == len(fila) - 1: # Contar elementos adyacentes mayores que cero
+                if contador_unos > 0:
+                    suma_fila += contador_unos
+                    contador_unos = 0
+                continue
+            if elemento > 0 and fila[i + 1] == 0:
+                continue
+            if elemento > 0 and fila[i + 1] == 1:
+                contador_unos += 1
+                elemento -= 1
+                suma_fila += elemento
+        Caso_2_pc.append(suma_fila)
+    total_original = sum(Caso_2_pc)
+    return Caso_2_pc, total_original
 ```
-- Subtract all 1 to each value in the list.
-![Captura de pantalla 2024-04-03 215050](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/64a565a7-3189-45f8-aaf2-bffa12d61d6e)
+- Subtract all to each value in the list.
 
-```python
-#Recorrer la lista
- for i in range(len(conteo_por_fila)):
-    if conteo_por_fila[i]!=0:
-        #Restar un elemento y sumarlo a la sumatoria
-        conteo_por_fila[i] -= 1
-        sumatoria += conteo_por_fila[i]
-```
 
 - Sum all values in a summation to get the contact perimeter of this position object.
-![Captura de pantalla 2024-04-03 215826](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/cb9e7db3-7037-47a8-9b10-57db94c2769b)
+
+![Captura de pantalla 2024-04-24 222200](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/3c16fdf7-5463-443a-a85d-4b920d6f4c09)
 
 ####Change of position of the binary object
 
-To get the total value of the contact perimeter of the object inside the image, is necesary chage the position of the object to get a count to have the missing elements.
+To get the total value of the contact perimeter of the object inside the image, is necesary chage the position of the object to get a count to have the missing elements, call the funtion "obtener_matriz_transpuesta" in  "impresion_resultados".
+
 
 ```python
  # Transponer la matriz para cambiar entre filas y columnas
-    matriz_transpuesta = np.transpose(Matriz)
+    def obtener_matriz_transpuesta(Matriz):
+    return np.transpose(Matriz)
 ```
 
-![Captura de pantalla 2024-04-03 220847](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/b411353a-1f3e-40aa-9543-e0aa2bed750c)
+![Captura de pantalla 2024-04-20 180334](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/f6206cb4-98d2-495a-906c-ca23a0cbba6f)
 
-
-- The funtion "obtener_columnas" do the same that previous funtion.
-
-![Captura de pantalla 2024-04-07 212342](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/d34bb0e3-5b7b-485d-abb3-2803043dfab9)
+- The funtion "Imprimir_resultados" do the same that previous funtion.
 
 - Contact perimeter new position image:
 
-![Captura de pantalla 2024-04-07 212844](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/236f98df-414b-4402-a179-ba66879c25ed)
+![Captura de pantalla 2024-04-24 222417](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/171f6c27-094e-461e-8187-2ec038d9a457)
 
-####Sum both contact perimeter
+####Sum both contact perimeter:
 - Sum the values of contact perimeter of both position of the object:
 
-def sum_colum_row():
-    # Llamar a las funciones obtener_filas() y obtener_columnas() y asignar los resultados a variables
-    sumatoria_filas, _ = obtener_filas()
-    sumatoria_columnas, _ = obtener_columnas()
-    
-    # Sumar las sumatorias obtenidas de las filas y las columnas
-    pc = sumatoria_filas + sumatoria_columnas
-    
-    
-    print("El perimetro de contacto es:",pc)
-    # Devolver el resultado
-    return pc
+```python
+def sumar_totales(Matriz):
+    # Función para sumar los totales originales y transpuestos
+    total_original, total_transpuesta = impresion_resultados(Matriz)
+    suma_total = total_original + total_transpuesta
+    return suma_total
 
-![Captura de pantalla 2024-04-07 213228](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/90f95abc-3528-48c6-b5bc-72272c9dcb72)
 
+```
+![Captura de pantalla 2024-04-24 223040](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/ad0c87d2-490e-4968-98a4-db1a5b986c28)
 ####Substitution of values
 
 Sustitude the value "pc" in the formula to get the compactness in a object 2D.
@@ -110,6 +123,11 @@ Sustitude the value "pc" in the formula to get the compactness in a object 2D.
 
 - Results of the calculus:
 
-![Captura de pantalla 2024-04-07 214154](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/9ea7d0ce-3fcd-4246-8fe4-8ca790f690b8)
+![Captura de pantalla 2024-04-20 181959](https://github.com/GreenAlanMX/Compactness_2D/assets/144835623/bac93730-489a-4255-8dfd-285f6978b8f5)
 
+Sources:
+
+1.[E. Bribiesca, Measuring 2-D shape compactness using the contact perimeter, Comput. Math. Appl. 33 (1997) 1–9](https://www.sciencedirect.com/science/article/pii/S0898122197000825)
+
+2.[E. Bribiesca, J.R. Jimenez, V. Medina, R. Valdes, O. Yanez, "A voxel-based measure of discrete compactness for brain imaging," en: Twenty-fifth Annual International Conference of the IEEE Engineering in Medicine and Biology Society, Silver Anniversary, Cancún, México, 2003, pp. 910–913.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4478878/)
 
